@@ -19,3 +19,5 @@ settings:
 rules:
   max-len:
     - off
+  require-jsdoc:
+    - off

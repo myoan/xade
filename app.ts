@@ -2,7 +2,7 @@ import 'phaser';
 import Vector from './src/vector';
 import Coordinate from './src/coordinate';
 
-class User {
+class Player {
   graphics: Phaser.GameObjects.Graphics;
   cood: Coordinate;
   v: number;
@@ -60,7 +60,7 @@ class User {
   }
 };
 
-var user: User;
+var player: Player;
 var text: Phaser.GameObjects.Text;
 
 export default class Demo extends Phaser.Scene {
@@ -74,26 +74,26 @@ export default class Demo extends Phaser.Scene {
     this.worldGraphics = this.add.graphics();
     const graphics = this.add.graphics();
     const gamesize = this.sys.game.scale.gameSize;
-    user = new User(graphics, gamesize.width / 2, gamesize.height / 2);
-    user.draw();
+    player = new Player(graphics, gamesize.width / 2, gamesize.height / 2);
+    player.draw();
 
-    this.input.keyboard.on('keydown-W', () => user.moveUp(), this);
-    this.input.keyboard.on('keydown-S', () => user.moveDown(), this);
-    this.input.keyboard.on('keydown-A', () => user.moveLeft(), this);
-    this.input.keyboard.on('keydown-D', () => user.moveRight(), this);
-    this.input.keyboard.on('keydown-UP', () => user.rotate(5), this);
-    this.input.keyboard.on('keydown-DOWN', () => user.rotate(-5), this);
+    this.input.keyboard.on('keydown-W', () => player.moveUp(), this);
+    this.input.keyboard.on('keydown-S', () => player.moveDown(), this);
+    this.input.keyboard.on('keydown-A', () => player.moveLeft(), this);
+    this.input.keyboard.on('keydown-D', () => player.moveRight(), this);
+    this.input.keyboard.on('keydown-UP', () => player.rotate(5), this);
+    this.input.keyboard.on('keydown-DOWN', () => player.rotate(-5), this);
 
     text = this.add.text(10, 10, '', {font: '16px Courier', color: '#0d0d0d'});
   }
 
   update() {
-    user.redraw();
+    player.redraw();
 
-    const local = user.cood.convertToLocal(new Vector(this.input.mousePointer.x, this.input.mousePointer.y));
+    const local = player.cood.convertToLocal(new Vector(this.input.mousePointer.x, this.input.mousePointer.y));
 
     text.setText([
-      '(' + user.pos().x + ', ' + user.pos().y + '): ' + user.cood.theta,
+      '(' + player.pos().x + ', ' + player.pos().y + '): ' + player.cood.theta,
       'X: ' + this.input.mousePointer.x,
       'Y: ' + this.input.mousePointer.y,
       'lX: ' + local.x,
@@ -103,15 +103,15 @@ export default class Demo extends Phaser.Scene {
 
     if (local.y > 0) {
       if (local.y < 5) {
-        user.cood.rotate(1);
+        player.cood.rotate(1);
       } else {
-        user.cood.rotate(5);
+        player.cood.rotate(5);
       }
     } else {
       if (local.y > -5) {
-        user.cood.rotate(-1);
+        player.cood.rotate(-1);
       } else {
-        user.cood.rotate(-5);
+        player.cood.rotate(-5);
       }
     }
   }
@@ -119,11 +119,13 @@ export default class Demo extends Phaser.Scene {
 
 const config = {
   type: Phaser.AUTO,
-  phisics: 'arcade',
+  width: 1000,
+  height: 1200,
+  physics: {
+    default: 'arcade',
+  },
   backgroundColor: '#eff0f3',
-  width: 800,
-  height: 600,
   scene: Demo,
 };
 
-const game = new Phaser.Game(config);
+new Phaser.Game(config);

@@ -1,5 +1,5 @@
-import Coordinate from '../src/coordinate';
-import Vector from '../src/vector';
+import Coordinate from '../src/lib/coordinate';
+import Vector from '../src/lib/vector';
 
 describe('Coordinate#move', () => {
   test('success', () => {

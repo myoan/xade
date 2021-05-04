@@ -1,5 +1,6 @@
 import Coordinate from '../lib/coordinate';
 import Vector from '../lib/vector';
+import TextureKey from '../enum/textureKey';
 
 export default class Player {
   scene: Phaser.Scene;
@@ -27,10 +28,10 @@ export default class Player {
     this.graphics.lineTo(36, 6);
     this.graphics.closePath();
     this.graphics.fillPath();
-    this.graphics.generateTexture('player', 60, 60);
+    this.graphics.generateTexture(TextureKey.Player, 60, 60);
     this.graphics.clear();
 
-    this.obj = this.scene.physics.add.image(this.cood.pos.x, this.cood.pos.y, 'player');
+    this.obj = this.scene.physics.add.image(this.cood.pos.x, this.cood.pos.y, TextureKey.Player);
     this.obj.setSize(40, 40);
     this.obj.setVelocity(0, 0);
     this.obj.setCollideWorldBounds(true);

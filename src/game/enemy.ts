@@ -3,29 +3,46 @@ import Coordinate from '../lib/coordinate';
 import Vector from '../lib/vector';
 import TextureKey from '../enum/textureKey';
 
-export default class Player extends Phaser.GameObjects.Container {
+export default class Enemy extends Phaser.GameObjects.Container {
   scene: Phaser.Scene;
+  graphics: Phaser.GameObjects.Graphics;
+  obj: Phaser.Physics.Arcade.Image;
   cood: Coordinate;
   v: number;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y);
+
     this.scene = scene;
+    this.graphics = scene.add.graphics();
     this.cood = new Coordinate(new Vector(x, y), 0);
 
-    const obj = this.scene.physics.add.image(0, 0, TextureKey.Player).setOrigin(0.5, 0.5);
-    this.add(obj);
-
-    // physicsにaddしないとsetVelocityなどが利用できない
+    this.drawObject();
+    this.add(this.obj);
+    this.scene.add.existing(this);
     this.scene.physics.add.existing(this);
+  }
 
-    const body = this.body as Phaser.Physics.Arcade.Body;
-    this.setSize(40, 40);
-    body.setCircle(20);
-    body.setVelocity(0, 0);
-    body.setCollideWorldBounds(true);
-    body.setBounce(1, 1);
-    this.rotation = this.radian(90);
+  private drawObject() {
+    this.graphics.fillStyle(0x00fd00, 1.0);
+    this.graphics.fillCircle(30, 30, 20);
+
+    this.graphics.lineStyle(1, 0x00fd00, 1);
+    this.graphics.beginPath();
+    this.graphics.moveTo(30, 0);
+    this.graphics.lineTo(24, 6);
+    this.graphics.lineTo(36, 6);
+    this.graphics.closePath();
+    this.graphics.fillPath();
+    this.graphics.generateTexture(TextureKey.Player, 60, 60);
+    this.graphics.clear();
+
+    this.obj = this.scene.physics.add.image(0, 0, TextureKey.Player);
+    this.obj.setSize(40, 40);
+    this.obj.setVelocity(0, 0);
+    this.obj.setCollideWorldBounds(true);
+    this.obj.setBounce(1, 1);
+    this.obj.angle = 90;
   }
 
   pos() {
@@ -33,7 +50,7 @@ export default class Player extends Phaser.GameObjects.Container {
   }
 
   rotate(x: number) {
-    this.rotation += this.radian(x);
+    this.obj.angle += x;
     this.cood.rotate(x);
   }
 
@@ -77,17 +94,12 @@ export default class Player extends Phaser.GameObjects.Container {
 
   private move(r: number, phai: number) {
     const v = this.cood.directionToWorld(phai, r);
-    const body = this.body as Phaser.Physics.Arcade.Body;
-    body.setVelocity(v.x, v.y);
+    this.obj.setVelocity(v.x, v.y);
     this.updatePos();
   }
 
   private updatePos() {
-    this.cood.pos.x = this.x;
-    this.cood.pos.y = this.y;
-  }
-
-  private radian(deg: number): number {
-    return deg * Math.PI / 180;
+    this.cood.pos.x = this.obj.x;
+    this.cood.pos.y = this.obj.y;
   }
 }

@@ -1,12 +1,15 @@
 import 'phaser';
 import Player from './src/game/player';
+import Enemy from './src/game/enemy';
 import Bullets from './src/game/bullets';
+import Preloader from './src/scene/preloader';
 
 let text: Phaser.GameObjects.Text;
 
 export default class Game extends Phaser.Scene {
   g: Phaser.GameObjects.Graphics;
   player: Player;
+  enemy: Player;
   bullets: Bullets;
 
   constructor() {
@@ -14,23 +17,34 @@ export default class Game extends Phaser.Scene {
   }
 
   create() {
-    this.cameras.main.setBounds(0, 0, 1080 * 2, 1080 * 2);
-    this.physics.world.setBounds(0, 0, 1080 * 2, 1080 * 2);
+    this.cameras.main.setBounds(0, 0, 1000, 1000);
+    this.physics.world.setBounds(0, 0, 1000, 1000);
 
-    this.createBullet();
-    this.createMap(2160, 2160);
+    this.createMap(1000, 1000);
+    // this.createEnemies(20, 2160, 2160);
+
+    const x = Phaser.Math.Between(0, 1000);
+    const y = Phaser.Math.Between(0, 1000);
+    this.enemy = new Player(this, x, y);
+    this.add.existing(this.enemy);
 
     this.player = new Player(this, 400, 300);
+    this.add.existing(this.player);
+
     text = this.add.text(10, 10, '', {font: '16px Courier', color: '#fdfdfd'});
     this.bullets = new Bullets(this);
 
-    this.input.keyboard.on('keydown-W', () => this.player.moveUp(), this);
-    this.input.keyboard.on('keydown-S', () => this.player.moveDown(), this);
+    this.physics.world.enable(this.player);
+    this.physics.world.enable(this.enemy);
+    this.physics.add.overlap(this.enemy, this.bullets, this.enemyDead);
+
+    this.input.keyboard.on('keydown-W', () => this.player.moveUpper(), this);
+    this.input.keyboard.on('keydown-S', () => this.player.moveDowner(), this);
     this.input.keyboard.on('keydown-A', () => this.player.moveLeft(), this);
     this.input.keyboard.on('keydown-D', () => this.player.moveRight(), this);
     this.input.keyboard.on('keyup', () => this.player.stop(), this);
 
-    this.cameras.main.startFollow(this.player.obj, true, 0.5, 0.5);
+    this.cameras.main.startFollow(this.player, true, 0.5, 0.5);
 
     this.input.on('pointerdown', () => {
       const pos = this.player.pos();
@@ -39,13 +53,13 @@ export default class Game extends Phaser.Scene {
     });
   }
 
-  createBullet() {
-    const graphics = this.add.graphics();
-
-    graphics.fillStyle(0x00fd00, 1.0);
-    graphics.fillCircle(2, 2, 2);
-    graphics.generateTexture('bullet', 4, 4);
-    graphics.clear();
+  enemyDead(
+    obj1: Phaser.GameObjects.GameObject,
+    obj2: Phaser.GameObjects.GameObject,
+    ) {
+    const enemy = obj1 as Player;
+    enemy.setVisible(false);
+    enemy.setActive(false);
   }
 
   createMap(width: number, height: number) {
@@ -94,11 +108,11 @@ const config = {
   parent: 'phaser-example',
   physics: {
     default: 'arcade',
-    arcade: {
-      debug: true,
-    },
+    // arcade: {
+    //   debug: true,
+    // },
   },
-  scene: Game,
+  scene: [Preloader, Game],
 };
 
 new Phaser.Game(config);

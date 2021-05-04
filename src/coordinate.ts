@@ -10,9 +10,9 @@ export default class Coordinate {
 
   move(r: number, phai: number = 0) {
     const rad = (this.theta + phai) * (Math.PI / 180);
-    const xd = this.pos.x + r * Math.cos(rad);
-    const yd = this.pos.y + r * Math.sin(rad);
-    this.pos = new Vector(xd, yd);
+    const newX = this.pos.x + r * Math.cos(rad);
+    const newY = this.pos.y + r * Math.sin(rad);
+    this.pos = new Vector(newX, newY);
   }
 
   rotate(d: number) {
@@ -33,6 +33,13 @@ export default class Coordinate {
     const denom = sin * sin + cos * cos;
     const x = -1 * ((this.pos.x - pos.x) * cos + (this.pos.y - pos.y) * sin) / denom;
     const y = ((this.pos.x - pos.x) * sin - (this.pos.y - pos.y) * cos) / denom;
+    return new Vector(x, y);
+  }
+
+  directionToWorld(phai: number, r: number = 1): Vector {
+    const rad = (this.theta + phai) * (Math.PI / 180);
+    const x = r * Math.cos(rad);
+    const y = r * Math.sin(rad);
     return new Vector(x, y);
   }
 }

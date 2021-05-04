@@ -66,3 +66,33 @@ describe('Coordinate#convertToLocal', () => {
     expect(actual.y).toBeCloseTo(0, 5);
   });
 });
+
+describe('Coordinate#directionToWorld', () => {
+  test('success', () => {
+    const cood = new Coordinate(new Vector(0, 0), 0);
+    const actual = cood.directionToWorld(0);
+    expect(actual.x).toBeCloseTo(1, 5);
+    expect(actual.y).toBeCloseTo(0, 5);
+  });
+
+  test('rotate 90', () => {
+    const cood = new Coordinate(new Vector(0, 0), 0);
+    const actual = cood.directionToWorld(90);
+    expect(actual.x).toBeCloseTo(0, 5);
+    expect(actual.y).toBeCloseTo(1, 5);
+  });
+
+  test('when length is specified', () => {
+    const cood = new Coordinate(new Vector(0, 0), 0);
+    const actual = cood.directionToWorld(0, 20);
+    expect(actual.x).toBeCloseTo(20, 5);
+    expect(actual.y).toBeCloseTo(0, 5);
+  });
+
+  test('when coord is rotated', () => {
+    const cood = new Coordinate(new Vector(0, 0), 90);
+    const actual = cood.directionToWorld(0);
+    expect(actual.x).toBeCloseTo(0, 5);
+    expect(actual.y).toBeCloseTo(1, 5);
+  });
+});

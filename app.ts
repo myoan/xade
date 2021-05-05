@@ -4,6 +4,7 @@ import Player from './src/game/Player';
 import Enemy from './src/game/Enemy';
 import Bullets from './src/game/Bullets';
 import Preloader from './src/scene/Preloader';
+import GameOver from './src/scene/GameOver';
 
 let text: Phaser.GameObjects.Text;
 
@@ -81,6 +82,9 @@ export default class Game extends Phaser.Scene {
   }
 
   update() {
+    if (!this.player.active) {
+      this.scene.run('game-over');
+    }
     text.setText([
       'X: ' + this.input.mousePointer.worldX,
       'Y: ' + this.input.mousePointer.worldY,
@@ -104,7 +108,7 @@ const config = {
     //   debug: true,
     // },
   },
-  scene: [Preloader, Game],
+  scene: [Preloader, Game, GameOver],
 };
 
 new Phaser.Game(config);

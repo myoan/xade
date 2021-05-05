@@ -3,6 +3,10 @@ import Player from '../game/Player';
 import Enemy from '../game/Enemy';
 import Bullets from '../game/Bullets';
 
+const SCREEN_WIDTH = 3840;
+const SCREEN_HEIGHT = 3840;
+const PLAYER_NUM = 30;
+
 let text: Phaser.GameObjects.Text;
 
 export default class Game extends Phaser.Scene {
@@ -17,17 +21,17 @@ export default class Game extends Phaser.Scene {
   }
 
   create() {
-    this.cameras.main.setBounds(0, 0, 3840, 3840);
-    this.physics.world.setBounds(0, 0, 3840, 3840);
+    this.cameras.main.setBounds(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    this.physics.world.setBounds(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    this.createMap(3840, 3840);
+    this.createMap(SCREEN_WIDTH, SCREEN_HEIGHT);
 
     this.player = new Player(this, 'player', 400, 300);
     this.player.setInputSources();
     this.player.setOverlap(new Array<Ship>(this.enemy));
 
-    text = this.add.text(10, 10, '', {font: '16px Courier', color: '#fdfdfd'});
-    this.createEnemies(20);
+    text = this.add.text(10, 10, '', {font: '16px Courier', color: '#fdfdfd'}).setScrollFactor(0);
+    this.createEnemies(PLAYER_NUM - 1);
 
     this.cameras.main.startFollow(this.player, true, 0.5, 0.5);
   }
@@ -35,8 +39,8 @@ export default class Game extends Phaser.Scene {
   createEnemies(n: number) {
     this.enemies = Array<Enemy>(n);
     for (let i = 0; i < n; i++) {
-      const x = Phaser.Math.Between(0, 3840);
-      const y = Phaser.Math.Between(0, 3840);
+      const x = Phaser.Math.Between(0, SCREEN_WIDTH);
+      const y = Phaser.Math.Between(0, SCREEN_HEIGHT);
       const enemy = new Enemy(this, `enemy-${i}`, x, y);
       this.add.existing(enemy);
       this.physics.world.enable(enemy);
@@ -79,12 +83,14 @@ export default class Game extends Phaser.Scene {
   }
 
   update() {
-    if (!this.player.active) {
-      this.scene.run('game-over');
+    const alives = this.enemies.filter((e) => e.active);
+    if (!this.player.active || alives.length == 0) {
+      this.scene.stop('game');
+      this.scene.run('game-over', {ranking: alives.length + 1});
     }
+
     text.setText([
-      'X: ' + this.input.mousePointer.worldX,
-      'Y: ' + this.input.mousePointer.worldY,
+      'Ranking: ' + (alives.length + 1),
     ]);
 
     for (const enemy of this.enemies) {

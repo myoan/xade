@@ -11,9 +11,6 @@ const config = {
   parent: 'phaser-example',
   physics: {
     default: 'arcade',
-    // arcade: {
-    //   debug: true,
-    // },
   },
   scene: [Preloader, Game, GameOver],
 };

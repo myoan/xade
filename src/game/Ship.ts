@@ -4,17 +4,23 @@ import Vector from '../lib/Vector';
 import TextureKey from '../enum/TextureKey';
 import {Bullet, Bullets} from './Bullets';
 
+const SHIP_SPEED = 200;
+const SHIP_HP = 3;
+const BULLET_SPEED = 500;
+
 export default class Ship extends Phaser.GameObjects.Container {
   scene: Phaser.Scene;
   cood: Coordinate;
   v: number;
   bullets: Bullets;
   id: string;
+  hp: number;
 
   constructor(scene: Phaser.Scene, id: string, x: number, y: number) {
     super(scene, x, y);
     this.scene = scene;
     this.id = id;
+    this.hp = SHIP_HP;
     this.cood = new Coordinate(new Vector(x, y), 0);
 
     const obj = this.scene.physics.add.image(0, 0, TextureKey.Ship).setOrigin(0.5, 0.5);
@@ -62,19 +68,19 @@ export default class Ship extends Phaser.GameObjects.Container {
   }
 
   moveUpper() {
-    this.move(200, 0);
+    this.move(SHIP_SPEED, 0);
   }
 
   moveDowner() {
-    this.move(200, -180);
+    this.move(SHIP_SPEED, -180);
   }
 
   moveLeft() {
-    this.move(200, -90);
+    this.move(SHIP_SPEED, -90);
   }
 
   moveRight() {
-    this.move(200, 90);
+    this.move(SHIP_SPEED, 90);
   }
 
   stop() {
@@ -85,13 +91,16 @@ export default class Ship extends Phaser.GameObjects.Container {
     if (!this.active) return;
 
     const pos = this.pos();
-    const v = this.cood.directionToWorld(0, 500);
+    const v = this.cood.directionToWorld(0, BULLET_SPEED);
     this.bullets.fireBullet(pos.x, pos.y, v.x, v.y);
   }
 
-  dead(obj1: Phaser.GameObjects.GameObject, obj2: Phaser.GameObjects.GameObject) {
+  hit(obj1: Phaser.GameObjects.GameObject, obj2: Phaser.GameObjects.GameObject) {
     const ship = obj1 as Ship;
-    ship.destroy();
+    ship.hp -= 1;
+    if (ship.hp < 0) {
+      ship.destroy();
+    }
     const bullet = obj2 as Bullet;
     bullet.destroy();
   }

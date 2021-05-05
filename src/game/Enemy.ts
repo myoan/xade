@@ -34,6 +34,6 @@ export default class Enemy extends Ship {
   }
 
   setOverlap(enemies: Ship[]) {
-    this.scene.physics.add.overlap(enemies, this.bullets, this.dead);
+    this.scene.physics.add.overlap(enemies, this.bullets, this.hit);
   }
 }

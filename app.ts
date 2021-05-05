@@ -22,10 +22,6 @@ export default class Game extends Phaser.Scene {
 
     this.createMap(1000, 1000);
 
-    const x = Phaser.Math.Between(0, 1000);
-    const y = Phaser.Math.Between(0, 1000);
-
-
     this.player = new Player(this, 400, 300);
     this.player.setInputSources();
     this.player.setOverlap(new Array<Ship>(this.enemy));

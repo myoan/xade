@@ -50,12 +50,13 @@ export default class Game extends Phaser.Scene {
       const v = this.player.cood.directionToWorld(0, 500);
       this.bullets.fireBullet(pos.x, pos.y, v.x, v.y);
     });
+
+    this.input.on('pointermove', (ptr: Phaser.Input.Pointer) => {
+      this.player.setDirection(ptr.worldX, ptr.worldY);
+    });
   }
 
-  enemyDead(
-    obj1: Phaser.GameObjects.GameObject,
-    obj2: Phaser.GameObjects.GameObject,
-    ) {
+  enemyDead(obj1: Phaser.GameObjects.GameObject, obj2: Phaser.GameObjects.GameObject) {
     const enemy = obj1 as Ship;
     enemy.setVisible(false);
     enemy.setActive(false);
@@ -90,8 +91,6 @@ export default class Game extends Phaser.Scene {
   }
 
   update() {
-    this.player.setDirection(this.input.mousePointer.worldX, this.input.mousePointer.worldY);
-
     text.setText([
       '(' + this.player.pos().x + ', ' + this.player.pos().y + '): ' + this.player.cood.theta,
       'X: ' + this.input.mousePointer.worldX,

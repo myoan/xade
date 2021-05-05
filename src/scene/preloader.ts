@@ -1,5 +1,5 @@
 import 'phaser';
-import TextureKey from '../enum/textureKey';
+import TextureKey from '../enum/TextureKey';
 
 export default class Preloader extends Phaser.Scene {
   graphics: Phaser.GameObjects.Graphics;
@@ -25,14 +25,14 @@ export default class Preloader extends Phaser.Scene {
     this.graphics.lineTo(36, 6);
     this.graphics.closePath();
     this.graphics.fillPath();
-    this.graphics.generateTexture(TextureKey.Player, 60, 60);
+    this.graphics.generateTexture(TextureKey.Ship, 60, 60);
     this.graphics.clear();
   }
 
   defineBullet() {
     this.graphics.fillStyle(0x00fd00, 1.0);
     this.graphics.fillCircle(2, 2, 2);
-    this.graphics.generateTexture('bullet', 4, 4);
+    this.graphics.generateTexture(TextureKey.Bullet, 4, 4);
     this.graphics.clear();
   }
 

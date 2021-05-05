@@ -1,5 +1,5 @@
 enum TextureKey {
   Bullet = 'bullet',
-  Player = 'player',
+  Ship = 'ship',
 }
 export default TextureKey;

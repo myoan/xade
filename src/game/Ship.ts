@@ -1,9 +1,9 @@
 import 'phaser';
-import Coordinate from '../lib/coordinate';
-import Vector from '../lib/vector';
-import TextureKey from '../enum/textureKey';
+import Coordinate from '../lib/Coordinate';
+import Vector from '../lib/Vector';
+import TextureKey from '../enum/TextureKey';
 
-export default class Player extends Phaser.GameObjects.Container {
+export default class Ship extends Phaser.GameObjects.Container {
   scene: Phaser.Scene;
   cood: Coordinate;
   v: number;
@@ -13,7 +13,7 @@ export default class Player extends Phaser.GameObjects.Container {
     this.scene = scene;
     this.cood = new Coordinate(new Vector(x, y), 0);
 
-    const obj = this.scene.physics.add.image(0, 0, TextureKey.Player).setOrigin(0.5, 0.5);
+    const obj = this.scene.physics.add.image(0, 0, TextureKey.Ship).setOrigin(0.5, 0.5);
     this.add(obj);
 
     // physicsにaddしないとsetVelocityなどが利用できない

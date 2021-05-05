@@ -1,4 +1,4 @@
-import Vector from '../src/lib/vector';
+import Vector from '../src/lib/Vector';
 
 describe('Vector#magnitute', () => {
   test('success', () => {

@@ -1,15 +1,14 @@
 import 'phaser';
-import Player from './src/game/player';
-import Enemy from './src/game/enemy';
-import Bullets from './src/game/bullets';
-import Preloader from './src/scene/preloader';
+import Ship from './src/game/Ship';
+import Bullets from './src/game/Bullets';
+import Preloader from './src/scene/Preloader';
 
 let text: Phaser.GameObjects.Text;
 
 export default class Game extends Phaser.Scene {
   g: Phaser.GameObjects.Graphics;
-  player: Player;
-  enemy: Player;
+  player: Ship;
+  enemy: Ship;
   bullets: Bullets;
 
   constructor() {
@@ -25,10 +24,10 @@ export default class Game extends Phaser.Scene {
 
     const x = Phaser.Math.Between(0, 1000);
     const y = Phaser.Math.Between(0, 1000);
-    this.enemy = new Player(this, x, y);
+    this.enemy = new Ship(this, x, y);
     this.add.existing(this.enemy);
 
-    this.player = new Player(this, 400, 300);
+    this.player = new Ship(this, 400, 300);
     this.add.existing(this.player);
 
     text = this.add.text(10, 10, '', {font: '16px Courier', color: '#fdfdfd'});
@@ -57,7 +56,7 @@ export default class Game extends Phaser.Scene {
     obj1: Phaser.GameObjects.GameObject,
     obj2: Phaser.GameObjects.GameObject,
     ) {
-    const enemy = obj1 as Player;
+    const enemy = obj1 as Ship;
     enemy.setVisible(false);
     enemy.setActive(false);
   }

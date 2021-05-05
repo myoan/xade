@@ -1,5 +1,5 @@
 import 'phaser';
-import TextureKey from '../enum/textureKey';
+import TextureKey from '../enum/TextureKey';
 
 class Bullet extends Phaser.Physics.Arcade.Sprite {
   scene: Phaser.Scene;

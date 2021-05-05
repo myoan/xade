@@ -3,6 +3,8 @@ import TextureKey from '../enum/TextureKey';
 
 export class Bullet extends Phaser.Physics.Arcade.Sprite {
   scene: Phaser.Scene;
+  ttl: Phaser.Time.TimerEvent;
+
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, TextureKey.Bullet);
     this.scene = scene;
@@ -17,6 +19,12 @@ export class Bullet extends Phaser.Physics.Arcade.Sprite {
     this.setVisible(true);
 
     this.setVelocity(vx, vy);
+    this.ttl = this.scene.time.addEvent({delay: 500, callback: this.dead, args: [this]});
+  }
+
+  dead(args) {
+    const bullet: Bullet = args;
+    bullet.destroy();
   }
 
   preUpdate(time, delta) {

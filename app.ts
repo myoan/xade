@@ -29,7 +29,7 @@ export default class Game extends Phaser.Scene {
     text = this.add.text(10, 10, '', {font: '16px Courier', color: '#fdfdfd'});
     this.createEnemies(20);
 
-    this.cameras.main.startFollow(this.player.ship, true, 0.5, 0.5);
+    this.cameras.main.startFollow(this.player, true, 0.5, 0.5);
   }
 
   createEnemies(n: number) {

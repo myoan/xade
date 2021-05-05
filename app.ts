@@ -1,6 +1,7 @@
 import 'phaser';
 import Ship from './src/game/Ship';
 import Player from './src/game/Player';
+import Enemy from './src/game/Enemy';
 import Bullets from './src/game/Bullets';
 import Preloader from './src/scene/Preloader';
 
@@ -10,6 +11,7 @@ export default class Game extends Phaser.Scene {
   g: Phaser.GameObjects.Graphics;
   player: Player;
   enemy: Ship;
+  enemies: Array<Enemy>;
   bullets: Bullets;
 
   constructor() {
@@ -17,12 +19,12 @@ export default class Game extends Phaser.Scene {
   }
 
   create() {
-    this.cameras.main.setBounds(0, 0, 1000, 1000);
-    this.physics.world.setBounds(0, 0, 1000, 1000);
+    this.cameras.main.setBounds(0, 0, 3840, 3840);
+    this.physics.world.setBounds(0, 0, 3840, 3840);
 
-    this.createMap(1000, 1000);
+    this.createMap(3840, 3840);
 
-    this.player = new Player(this, 400, 300);
+    this.player = new Player(this, 'player', 400, 300);
     this.player.setInputSources();
     this.player.setOverlap(new Array<Ship>(this.enemy));
 
@@ -33,16 +35,21 @@ export default class Game extends Phaser.Scene {
   }
 
   createEnemies(n: number) {
-    const enemies = Array<Ship>(n);
+    this.enemies = Array<Enemy>(n);
     for (let i = 0; i < n; i++) {
-      const x = Phaser.Math.Between(0, 1000);
-      const y = Phaser.Math.Between(0, 1000);
-      const enemy = new Ship(this, x, y);
+      const x = Phaser.Math.Between(0, 3840);
+      const y = Phaser.Math.Between(0, 3840);
+      const enemy = new Enemy(this, `enemy-${i}`, x, y);
       this.add.existing(enemy);
       this.physics.world.enable(enemy);
-      enemies[i] = enemy;
+      this.enemies[i] = enemy;
     }
-    this.player.setOverlap(enemies);
+    this.player.setOverlap(this.enemies);
+    for (const enemy of this.enemies) {
+      const other: Array<Ship> = this.enemies.filter((e) => e.id != enemy.id);
+      other.push(this.player as Ship);
+      enemy.setOverlap(other);
+    }
   }
 
   createMap(width: number, height: number) {
@@ -78,6 +85,11 @@ export default class Game extends Phaser.Scene {
       'X: ' + this.input.mousePointer.worldX,
       'Y: ' + this.input.mousePointer.worldY,
     ]);
+
+    for (const enemy of this.enemies) {
+      enemy.randomWalk();
+      enemy.randomShoot();
+    }
   }
 }
 
@@ -88,9 +100,9 @@ const config = {
   parent: 'phaser-example',
   physics: {
     default: 'arcade',
-    arcade: {
-      debug: true,
-    },
+    // arcade: {
+    //   debug: true,
+    // },
   },
   scene: [Preloader, Game],
 };

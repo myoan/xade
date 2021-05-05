@@ -4,8 +4,8 @@ import Ship from './Ship';
 export default class Player extends Ship {
   scene: Phaser.Scene;
 
-  constructor(scene: Phaser.Scene, x: number, y: number) {
-    super(scene, x, y);
+  constructor(scene: Phaser.Scene, id: string, x: number, y: number) {
+    super(scene, id, x, y);
 
     this.scene = scene;
     scene.add.existing(this);

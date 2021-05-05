@@ -9,10 +9,12 @@ export default class Ship extends Phaser.GameObjects.Container {
   cood: Coordinate;
   v: number;
   bullets: Bullets;
+  id: string;
 
-  constructor(scene: Phaser.Scene, x: number, y: number) {
+  constructor(scene: Phaser.Scene, id: string, x: number, y: number) {
     super(scene, x, y);
     this.scene = scene;
+    this.id = id;
     this.cood = new Coordinate(new Vector(x, y), 0);
 
     const obj = this.scene.physics.add.image(0, 0, TextureKey.Ship).setOrigin(0.5, 0.5);
@@ -80,6 +82,8 @@ export default class Ship extends Phaser.GameObjects.Container {
   }
 
   fire() {
+    if (!this.active) return;
+
     const pos = this.pos();
     const v = this.cood.directionToWorld(0, 500);
     this.bullets.fireBullet(pos.x, pos.y, v.x, v.y);
@@ -95,6 +99,7 @@ export default class Ship extends Phaser.GameObjects.Container {
   private move(r: number, phai: number) {
     const v = this.cood.directionToWorld(phai, r);
     const body = this.body as Phaser.Physics.Arcade.Body;
+    if (body == undefined) return;
     body.setVelocity(v.x, v.y);
     this.updatePos();
   }

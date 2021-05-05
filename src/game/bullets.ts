@@ -1,7 +1,7 @@
 import 'phaser';
 import TextureKey from '../enum/TextureKey';
 
-class Bullet extends Phaser.Physics.Arcade.Sprite {
+export class Bullet extends Phaser.Physics.Arcade.Sprite {
   scene: Phaser.Scene;
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, TextureKey.Bullet);
@@ -29,7 +29,7 @@ class Bullet extends Phaser.Physics.Arcade.Sprite {
   }
 }
 
-export default class Bullets extends Phaser.Physics.Arcade.Group {
+export class Bullets extends Phaser.Physics.Arcade.Group {
   scene: Phaser.Scene;
 
   constructor(scene: Phaser.Scene) {
@@ -49,9 +49,7 @@ export default class Bullets extends Phaser.Physics.Arcade.Group {
     const bullet = this.getFirstDead(true);
     this.scene.physics.add.existing(bullet);
     bullet.fire(x, y, vx, vy);
-    // const bullet = this.getFirstDead(false);
-    // if (bullet) {
-    //   bullet.fire(x, y, vx, vy);
-    // }
   }
 }
+
+export default Bullets;

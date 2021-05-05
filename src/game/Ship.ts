@@ -2,11 +2,13 @@ import 'phaser';
 import Coordinate from '../lib/Coordinate';
 import Vector from '../lib/Vector';
 import TextureKey from '../enum/TextureKey';
+import {Bullet, Bullets} from './Bullets';
 
 export default class Ship extends Phaser.GameObjects.Container {
   scene: Phaser.Scene;
   cood: Coordinate;
   v: number;
+  bullets: Bullets;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y);
@@ -26,6 +28,8 @@ export default class Ship extends Phaser.GameObjects.Container {
     body.setCollideWorldBounds(true);
     body.setBounce(1, 1);
     this.rotation = this.radian(90);
+
+    this.bullets = new Bullets(scene);
   }
 
   pos() {
@@ -73,6 +77,19 @@ export default class Ship extends Phaser.GameObjects.Container {
 
   stop() {
     this.move(0, 0);
+  }
+
+  fire() {
+    const pos = this.pos();
+    const v = this.cood.directionToWorld(0, 500);
+    this.bullets.fireBullet(pos.x, pos.y, v.x, v.y);
+  }
+
+  dead(obj1: Phaser.GameObjects.GameObject, obj2: Phaser.GameObjects.GameObject) {
+    const ship = obj1 as Ship;
+    ship.destroy();
+    const bullet = obj2 as Bullet;
+    bullet.destroy();
   }
 
   private move(r: number, phai: number) {

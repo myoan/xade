@@ -20,7 +20,9 @@ module.exports = {
     extensions: ['.ts', '.tsx', '.js'],
   },
   devServer: {
-    contentBase: path.join(__dirname, 'dist'),
+    static: {
+      directory: path.join(__dirname, 'dist')
+    },
     compress: false,
     port: 8081,
   },
